@@ -1,12 +1,12 @@
-#ifndef MONTY_H
-#define MONTY_H
+#ifndef monty_h
+#define monty_h
 
-/* Standard Libraries */
+/* libraries */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/* Data Structures */
+/* struct for stack */
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -14,34 +14,39 @@
  * @prev: points to the previous element of the stack (or queue)
  * @next: points to the next element of the stack (or queue)
  *
- * Description: doubly linked list structure for stack, queues, LIFO, FIFO
-*/
+ * Description: doubly linked list node structure
+ * for stack, queues, LIFO, FIFO
+ */
 typedef struct stack_s
 {
 	int n;
 	struct stack_s *prev;
 	struct stack_s *next;
-} monty_stack_t;
+} stack_t;
+
+/* struct for instructions */
 
 /**
  * struct instruction_s - opcode and its function
  * @opcode: the opcode
  * @f: function to handle the opcode
- *
- * Description: opcode and its function for stack, queues, LIFO, FIFO
-*/
+ * Description: opcode and its function
+ * for stack, queues, LIFO, FIFO
+ */
 typedef struct instruction_s
 {
 	char *opcode;
-	void (*f)(monty_stack_t **stack, unsigned int line_number, char *arg);
+	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-/* Function Prototypes */
-int main(int argc, char *argv[]);
-void push(monty_stack_t **stack, unsigned int line_number, char *arg);
-void pall(monty_stack_t **stack, unsigned int line_number, char *arg);
-void monty_run(const char *file_name);
-void pint(monty_stack_t **stack, unsigned int line_number, char *arg);
-void pop(monty_stack_t **stack, unsigned int line_number, char *arg);
-
-#endif /* MONTY_H */
+/* prototypes */
+void push(stack_t **stack, unsigned int line_number);
+void pall(stack_t **stack, unsigned int line_number);
+void free_stack(stack_t *stack);
+void tokenize_and_execute(char *line, unsigned int line_number, stack_t **stack);
+void pint(stack_t **stack, unsigned int line_number);
+void pop(stack_t **stack, unsigned int line_number);
+void swap(stack_t **stack, unsigned int line_number);
+void add(stack_t **stack, unsigned int line_number);
+void nop(stack_t **stack, unsigned int line_number);
+#endif
