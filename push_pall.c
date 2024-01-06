@@ -1,45 +1,62 @@
-#include "monty.h"
+#include "monty.h"#include "monty.h"
 
 /**
- * main - function that implement push and pall
- * @argc: argument counter
- * @argv: argument vector
- * Return: 0 for success
- */
-
-int main(int argc, char *argv[])
+ * push - pushes an element to the stack
+ * @stack: double pointer to the top of the stack
+ * @line_number: line number in the script
+ * @arg: argument for the push opcode
+*/
+void push(monty_stack_t **stack, unsigned int line_number, char *arg)
 {
-	if (argc != 2)
+	int num;
+	monty_stack_t *new_node;
+
+	if (arg == NULL)
 	{
-		fprintf(stderr, "USAGE: monty file\n");
+		fprintf(stderr, "L%d: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 
-	FILE *file = fopen(argv[1], "r");
-
-	if (file == NULL)
+	num = atoi(arg);
+	if ((num == 0 && arg[0] != '0') || (num != 0 && arg[0] == '0'))
 	{
-		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+		fprintf(stderr, "L%d: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 
-	char *line = NULL;
-	size_t line_size = 0;
-	unsigned int line_number = 0;
-	stack_t *stack = NULL;
+		new_node = malloc(sizeof(monty_stack_t));
+		if (new_node == NULL)
+		{
+			fprintf(stderr, "Error: malloc failed\n");
+			exit(EXIT_FAILURE);
+		}
 
-	while (getline(&line, &line_size, file) != -1)
-	{
-		line_number++;
-		tokenize_and_execute(line, line_number, &stack);
-	}
+		new_node->n = num;
+		new_node->prev = NULL;
+		new_node->next = *stack;
+		if (*stack != NULL)
+		{
+			(*stack)->prev = new_node;
+		}
+		*stack = new_node;
+}
 
-	/* Close the file */
-	fclose(file);
+/**
+ * pall - prints all the values on the stack
+ * @stack: double pointer to the top of the stack
+ * @line_number: line number in the script
+ * @arg: unused
+*/
+void pall(monty_stack_t **stack, unsigned int line_number, char *arg)
+{
+	(void)line_number;
+	(void)arg;
 
-	/* Free allocated memory */
-	free(line);
-	free_stack(stack);
+		monty_stack_t *current = *stack;
 
-	return (0);
+		while (current != NULL)
+		{
+			printf("%d\n", current->n);
+			current = current->next;
+		}
 }
